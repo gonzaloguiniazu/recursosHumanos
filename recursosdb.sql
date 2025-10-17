@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 31-05-2025 a las 19:10:25
+-- Tiempo de generación: 23-08-2025 a las 01:19:43
 -- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.1.25
+-- Versión de PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `recursosdb`
 --
-CREATE DATABASE IF NOT EXISTS `recursosdb` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `recursosdb`;
 
 -- --------------------------------------------------------
 
@@ -29,23 +27,21 @@ USE `recursosdb`;
 -- Estructura de tabla para la tabla `asistencia`
 --
 
-DROP TABLE IF EXISTS `asistencia`;
 CREATE TABLE `asistencia` (
   `id_asistencia` int(11) NOT NULL,
   `id_empleados` int(11) NOT NULL,
   `fecha` date NOT NULL,
-  `horaEntrada` time(6) NOT NULL,
-  `horaSalida` time(6) NOT NULL,
-  `nro_legajo` int(11) DEFAULT NULL
+  `horaEntrada` time NOT NULL,
+  `horaSalida` time NOT NULL,
+  `llego_tarde` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `asistencia`
 --
 
-INSERT INTO `asistencia` (`id_asistencia`, `id_empleados`, `fecha`, `horaEntrada`, `horaSalida`, `nro_legajo`) VALUES
-(2, 0, '2025-05-30', '14:58:15.000000', '19:47:14.000000', 6372),
-(3, 0, '2025-05-30', '19:57:10.000000', '00:00:00.000000', 1111);
+INSERT INTO `asistencia` (`id_asistencia`, `id_empleados`, `fecha`, `horaEntrada`, `horaSalida`, `llego_tarde`) VALUES
+(1, 12, '2025-06-30', '16:34:15', '00:00:00', 0);
 
 -- --------------------------------------------------------
 
@@ -53,13 +49,12 @@ INSERT INTO `asistencia` (`id_asistencia`, `id_empleados`, `fecha`, `horaEntrada
 -- Estructura de tabla para la tabla `empleados`
 --
 
-DROP TABLE IF EXISTS `empleados`;
 CREATE TABLE `empleados` (
   `id_empleados` int(11) NOT NULL,
   `nombre` varchar(50) NOT NULL,
   `apellido` varchar(50) NOT NULL,
   `dni` varchar(15) NOT NULL,
-  `nro_legajo` varchar(20) NOT NULL,
+  `nro_legajo` int(11) DEFAULT NULL,
   `telefono` varchar(20) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `rol` enum('empleado','admin') NOT NULL DEFAULT 'empleado',
@@ -72,12 +67,26 @@ CREATE TABLE `empleados` (
 --
 
 INSERT INTO `empleados` (`id_empleados`, `nombre`, `apellido`, `dni`, `nro_legajo`, `telefono`, `email`, `rol`, `codigo_barras`, `clave`) VALUES
-(10, 'Miguel Angel', 'Sanchez', '22645780', '6372', '01127554663', 'miguesanz11@gmail.com', 'empleado', '6372', '$2y$10$2IGR/pw7f/my/CCEZnrpqewLHeWI0wFfTu1HI9Grj48Yw/9PIPGA.'),
-(11, 'milton', 'gauna', '44889025', '1111', '01167543213', 'miltonsg3@gmail.com', 'empleado', '1111', '$2y$10$9Ym6U8ymUmEBIBNYpCKo9OjW2SEzNZY5iWdIVupiKc.YMxfhWdb/W'),
-(12, 'rosa', 'cordoba', '22622414', '3731', '1150584534', 'rosacordoba.cr@gmail.com', 'empleado', '3731', '$2y$10$eOS9ofoJIyGBLjAVvg2KEOn.Yqwzp4ufiRKNBStRqg7Tcy189TCNO'),
-(13, 'gonzalo', 'guiñazu', '36982270', '1502', '1168610643', 'gonzaloguiniazu@gmail.com', 'empleado', '1502', '$2y$10$CDP7figxpQusIUykfnodEOCPhGkxdqfHv3JkIu8TDny.hHMvF.o9q'),
-(14, 'maxi', 'bonifacio', '31680301', '51', '11654789', 'maximilianofransolini@gmail.com', 'empleado', '51', '$2y$10$df9wNBn4sIBULmqStk61Au3kCegRIApuJ1/LxBtixwZqtITZKaA9G'),
-(15, 'rocio', 'avalos', '', '43', '1131325955', NULL, 'empleado', NULL, '');
+(21, 'Silvina', 'Pereyra', '00000000', 1, NULL, NULL, 'admin', NULL, '$2y$10$5Dvc4APZ2Gf9YBUDEsPEYe/3mjuomnSJZPJOSjIX9kiOrxsqvt0l.');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `horario`
+--
+
+CREATE TABLE `horario` (
+  `id` int(11) NOT NULL,
+  `hora_limite_entrada` time NOT NULL,
+  `hora_limite_salida` time NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `horario`
+--
+
+INSERT INTO `horario` (`id`, `hora_limite_entrada`, `hora_limite_salida`) VALUES
+(1, '18:30:00', '20:00:00');
 
 --
 -- Índices para tablas volcadas
@@ -94,8 +103,13 @@ ALTER TABLE `asistencia`
 --
 ALTER TABLE `empleados`
   ADD PRIMARY KEY (`id_empleados`),
-  ADD UNIQUE KEY `dni` (`dni`),
-  ADD UNIQUE KEY `nro_legajo` (`nro_legajo`);
+  ADD UNIQUE KEY `dni` (`dni`);
+
+--
+-- Indices de la tabla `horario`
+--
+ALTER TABLE `horario`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -111,7 +125,13 @@ ALTER TABLE `asistencia`
 -- AUTO_INCREMENT de la tabla `empleados`
 --
 ALTER TABLE `empleados`
-  MODIFY `id_empleados` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id_empleados` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+
+--
+-- AUTO_INCREMENT de la tabla `horario`
+--
+ALTER TABLE `horario`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

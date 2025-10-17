@@ -53,42 +53,43 @@
 <body>
 <div class="container">
 <?php
-
-
-
-
 $conexion = mysqli_connect("localhost", "root", "", "recursosdb") or die("Problemas con la conexión");
 
-// Guardamos el valor de nro_legajo como código de barras (solo como dato)
-$codigo_barras = $_REQUEST["nro_legajo"];
+$nombre = $_REQUEST["Nombre"];
+$apellido = $_REQUEST["Apellido"];
+$dni = $_REQUEST["DNI"];
+$telefono = $_REQUEST["Telefono"];
+$email = $_REQUEST["Email"];
 
-// Ejecutamos el insert incluyendo la nueva columna
-//mysqli_query($conexion, 'INSERT INTO empleados(nombre, apellido, dni, nro_legajo, telefono, email, codigo_barras)
-   // VALUES ("'.$_REQUEST["Nombre"].'", "'.$_REQUEST["Apellido"].'", '.$_REQUEST["DNI"].', "'.$_REQUEST["nro_legajo"].'", '.$_REQUEST["Telefono"].', "'.$_REQUEST["Email"].'", "'.$codigo_barras.'")')
+// La contraseña inicial será el DNI, pero hasheada
+$claveHash = password_hash($dni, PASSWORD_DEFAULT);
 
-
-
-$claveInicial = $_REQUEST["DNI"]; // contraseña inicial = DNI
-
-mysqli_query($conexion, 'INSERT INTO empleados(nombre, apellido, dni, nro_legajo, telefono, email, codigo_barras, clave)
-    VALUES ("'.$_REQUEST["Nombre"].'", "'.$_REQUEST["Apellido"].'", "'.$_REQUEST["DNI"].'", "'.$_REQUEST["nro_legajo"].'", "'.$_REQUEST["Telefono"].'", "'.$_REQUEST["Email"].'", "'.$codigo_barras.'", "'.$claveInicial.'")')
-
-
-
-//mysqli_query($conexion, 'INSERT INTO empleados(nombre, apellido, dni, nro_legajo, telefono, email, codigo_barras)
- //   VALUES ("'.$_REQUEST["Nombre"].'", "'.$_REQUEST["Apellido"].'", "'.$_REQUEST["DNI"].'", "'.$_REQUEST["nro_legajo"].'", "'.$_REQUEST["Telefono"].'", "'.$_REQUEST["Email"].'", "'.$codigo_barras.'")')
-
+// Ejecutar el insert con la clave hasheada
+mysqli_query($conexion, "INSERT INTO empleados(nombre, apellido, dni, telefono, email, clave)
+    VALUES ('$nombre', '$apellido', '$dni', '$telefono', '$email', '$claveHash')")
     or die("Problemas en el insert: " . mysqli_error($conexion));
 
-// Cerramos conexión
+$idInsertado = mysqli_insert_id($conexion);
+
+mysqli_query($conexion, "UPDATE empleados 
+    SET nro_legajo = $idInsertado, codigo_barras = $idInsertado 
+    WHERE id_empleados = $idInsertado")
+    or die("Error al actualizar legajo: " . mysqli_error($conexion));
+
+
 mysqli_close($conexion);
+
+
 
 // Mostramos mensaje de alta
 echo "<h3>El empleado fue dado de alta.</h3>";
 ?>
 <a href="listaEmpleados.php">Ver lista de empleados</a>
+
 </div>
 </body>
 </html>
+
+
 
 

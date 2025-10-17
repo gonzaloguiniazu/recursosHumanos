@@ -85,18 +85,19 @@
 <?php
 session_start();
 if (!isset($_SESSION['rol']) || $_SESSION['rol'] != 'empleado') {
-    header("Location: index.php");
+    header("Location:../index.php");
     exit;
 }
 ?>
 
 <div class="contenido">
-    <h1>Bienvenido, <?php echo $_SESSION['nombre']; ?></h1>
+    <h1>Bienvenido, <?php echo ucfirst(htmlspecialchars($_SESSION['nombre'], ENT_QUOTES, 'UTF-8')); ?></h1>
+
 
     <!-- Formulario principal con botones -->
     <form>
     <input type="button" value="Ver mi código de barras" onClick="location.href='barcode.php'">
-    <input type="button" value="Mostrar mis datos" onClick="location.href='listaChoferesOperador.php'">
+    <input type="button" value="Mostrar mis datos" onClick="location.href='misDatos.php'">
     <input type="button" value="Cambiar contraseña" onClick="location.href='cambiar_clave.php'">
     <div class="button-group">
         <input type="button" value="Cerrar Sesión" onClick="location.href='logout.php'">

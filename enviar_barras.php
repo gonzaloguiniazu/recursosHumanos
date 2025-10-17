@@ -12,7 +12,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 // Conectar a la base de datos
-$mysqli = new mysqli('localhost', 'root', '', 'recursosdb'); // Cambiar datos reales
+$mysqli = new mysqli('localhost', 'root', '', 'recursosdb'); // Cambiar si tu DB tiene otros datos
 
 if ($mysqli->connect_error) {
     die('Error de conexión: ' . $mysqli->connect_error);
@@ -33,54 +33,39 @@ if (empty($email)) {
     die('No se encontró el correo del empleado.');
 }
 
-// Generar código de barras y guardarlo como archivo
+// Generar código de barras como imagen
 $generator = new BarcodeGeneratorPNG();
 $barcodeData = $generator->getBarcode($nro_legajo, $generator::TYPE_CODE_128, 4, 100);
-$barcodePath = 'codigo_barra.png';
-file_put_contents($barcodePath, $barcodeData); // Guardar imagen en el servidor
+$barcodeBase64 = base64_encode($barcodeData);
 
-// Configurar PHPMailer
+// Configurar PHPMailer con Gmail
 $mail = new PHPMailer(true);
 try {
     $mail->isSMTP();
     $mail->Host = 'smtp.gmail.com';
     $mail->SMTPAuth = true;
-    $mail->Username = 'miguesanz11@gmail.com'; // Tu correo
-    $mail->Password = 'xpoxravlsccirnzp';       // Tu contraseña de aplicación
-    $mail->SMTPSecure = 'tls';
+    $mail->Username = 'gonzaloguiniazu@gmail.com'; // <-- tu correo Gmail real
+    $mail->Password = 'gcts ogqq atip fwwk'; // <-- contraseña generada en Google
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port = 587;
-    $mail->CharSet = 'UTF-8';
 
-    $mail->setFrom('miguesanz11@gmail.com', 'Recursos Humanos');
+    $mail->setFrom('gonzaloguioniazu@gmail.com', 'Recursos Humanos'); // Mismo que Username
     $mail->addAddress($email, "$nombre $apellido");
-
-    // Adjuntar imagen para visualizarla dentro del correo
-    $mail->addEmbeddedImage($barcodePath, 'barcode_img');
-
-    // Adjuntar imagen como archivo descargable
-    $mail->addAttachment($barcodePath, 'codigo_barras.png');
 
     $mail->isHTML(true);
     $mail->Subject = 'Tu código de barras para fichar';
     $mail->Body = "
         <p>Hola <strong>$nombre $apellido</strong>,</p>
         <p>Este es tu código de barras personal para fichar:</p>
-        <img src='cid:barcode_img' alt='Código de Barras'><br><br>
+        <img src='data:image/png;base64,$barcodeBase64' alt='Código de Barras'><br><br>
         <p>Te recomendamos guardar esta imagen en tu celular.</p>
         <p>Saludos,<br>RRHH</p>
     ";
 
     $mail->send();
-    echo 'El correo fue enviado correctamente a ' . htmlspecialchars($email) . '<br><br>';
-    echo '<form action="index.php" method="get">';
-    echo '<button type="submit" style="padding:12px 24px; background-color:#007BFF; color:white; border:none; border-radius:5px; font-size:16px; cursor:pointer;">Salir</button>';
-    echo '</form>';
-    
-
-    // Borrar el archivo temporal del servidor
-    unlink($barcodePath);
-
+    echo 'El correo fue enviado correctamente a ' . htmlspecialchars($email);
 } catch (Exception $e) {
     echo 'Error al enviar el correo: ', $mail->ErrorInfo;
 }
 ?>
+

@@ -16,7 +16,7 @@ if ($conexion->connect_error) {
 // Consulta con JOIN para unir asistencia con empleados
 $sql = "SELECT a.fecha, a.horaEntrada, a.horaSalida, e.nombre, e.apellido, e.nro_legajo
         FROM asistencia a
-        JOIN empleados e ON a.nro_legajo = e.nro_legajo
+        JOIN empleados e ON a.id_empleados = e.id_empleados
         ORDER BY a.fecha DESC, a.horaEntrada DESC";
 
 $resultado = $conexion->query($sql);
@@ -105,5 +105,6 @@ $resultado = $conexion->query($sql);
     ?>
         <button onclick="window.location.href='exportar_asistencia.php'">Exportar a Excel</button>
     <button onclick="window.location.href='lector_codigos.php'">Volver al escáner</button>
+    <button onclick="window.location.href='../vista/admin.html'">Volver al inicio</button>
 </body>
 </html>

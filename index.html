@@ -1,17 +1,10 @@
-<?php
-session_start();
-?>
-
-<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Recursos Humanos 182 - Login</title>
+  <title>Recursos Humanos 182</title>
   <link rel="icon" href="icon.jpg">
-</head>
-<body>
-<style>
-  body {
+  <style>
+    body {
       margin: 0;
       padding: 0;
       background-image: url('https://www.microtech.es/hubfs/IA_recursos_humanos.jpg');
@@ -58,7 +51,7 @@ session_start();
       font-size: 0.95em;
     }
 
-    input[type="submit"] {
+    input[type="button"] {
       background-color: #A3E4D7;
       border: none;
       color: #154360;
@@ -70,26 +63,46 @@ session_start();
       transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-    input[type="submit"]:hover {
+    input[type="button"]:hover {
       background-color: #76D7C4;
       color: #0B5345;
     }
-</style>
-<form method="POST" action="modelo/login.php">
+
+  </style>
+</head>
+<body>
+
+<script type="text/javascript">
+  function verificar() {
+    var clave = document.getElementById('clave').value;
+    var usuario = document.getElementById('usuario').value;
+
+    if (usuario === '' || clave === '') {
+      alert('Algun campo esta vacio. Por favor, completar con los datos requeridos.');
+    } else if (clave.length < 4) {
+      alert('La clave no puede ser menor a 4 caracteres.');
+    } else if (usuario == "admin" && clave == "admin") {
+      alert('Bienvenido administrador.');
+      location.href = "admin.html";
+    } else if (usuario == "usuario" && clave == "usuario") {
+      alert('Bienvenido empleado.');
+      location.href = "empleado.html";
+    } else {
+      alert('Usuario o contrasena incorrecto.');
+    }
+  }
+</script>
+
+<form>
   <h2>Inicio de Sesión</h2>
+  <label for="usuario">Usuario</label>
+  <input type="text" id="usuario">
 
-  <label for="usuario">Usuario (DNI)</label>
-  <input type="text" id="usuario" name="usuario" required>
+  <label for="clave">Clave</label>
+  <input type="password" id="clave">
 
-  <label for="clave">Clave (DNI)</label>
-  <input type="password" id="clave" name="clave" required>
-
-  <input type="submit" value="Ingresar">
-
-  <div style="text-align: center; margin-top: 15px;">
-  <a href="manual_usuario.pdf" target="_blank" style="color: #117864; text-decoration: none;">Ver Manual de Usuario (PDF)</a>
-</div>
-
+  <input type="button" value="Confirmar" onClick="verificar()">
 </form>
+
 </body>
 </html>

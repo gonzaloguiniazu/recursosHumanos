@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="icon.jpg">
+    <title>Empleado</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('https://www.microtech.es/hubfs/recursos_humanos_capital_humano.jpg'); 
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+
+        form {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            max-width: 300px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #FFFFFF;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        input[type="button"] {
+            background-color: #fdd835; /* Color amarillo taxi */
+            border: none;
+            color: black;
+            padding: 10px 20px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin: 10px 0;
+            width: 100%;
+        }
+
+        input[type="button"]:hover {
+            background-color: #fbc02d; /* Color amarillo más oscuro */
+        }
+
+        .button-group {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <form>
+        <h1><element>Empleado</element></h1>
+        <input type="button" value="Mostrar datos personales" onClick="location.href='listaAutosOperador.php'">
+        <input type="button" value="Mostrar código de barras" onClick="location.href='listaChoferesOperador.php'">
+        <input type="button" value="Mostrar viajes" onClick="location.href='mostrarViajesOperador.php'">
+        <div class="button-group">
+            <input type="button" value="Cerrar Sesión" onClick="location.href='Index.html'">
+        </div>
+    </form>
+</body>
+</html>
