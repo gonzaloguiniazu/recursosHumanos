@@ -26,7 +26,7 @@ SET time_zone = "+00:00";
 --
 -- Estructura de tabla para la tabla `asistencia`
 --
-
+DROP TABLE IF EXISTS `asistencia`;
 CREATE TABLE `asistencia` (
   `id_asistencia` int(11) NOT NULL,
   `id_empleados` int(11) NOT NULL,
@@ -48,7 +48,7 @@ INSERT INTO `asistencia` (`id_asistencia`, `id_empleados`, `fecha`, `horaEntrada
 --
 -- Estructura de tabla para la tabla `empleados`
 --
-
+DROP TABLE IF EXISTS `empleados`;
 CREATE TABLE `empleados` (
   `id_empleados` int(11) NOT NULL,
   `nombre` varchar(50) NOT NULL,
@@ -74,7 +74,7 @@ INSERT INTO `empleados` (`id_empleados`, `nombre`, `apellido`, `dni`, `nro_legaj
 --
 -- Estructura de tabla para la tabla `horario`
 --
-
+DROP TABLE IF EXISTS `horario`;
 CREATE TABLE `horario` (
   `id` int(11) NOT NULL,
   `hora_limite_entrada` time NOT NULL,
